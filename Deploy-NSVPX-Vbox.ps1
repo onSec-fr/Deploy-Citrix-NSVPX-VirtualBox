@@ -46,7 +46,7 @@
     .NOTES
 
         Copyright 2017 Dominique Broeglin
-		Forked : OnSec-fr
+	Fork 2020 : OnSec-fr
 
         MIT License
 
