@@ -46,6 +46,7 @@
     .NOTES
 
         Copyright 2017 Dominique Broeglin
+		Forked : OnSec-fr
 
         MIT License
 
@@ -102,9 +103,9 @@ function New-TemporaryDirectory {
 }
 
 if($Force -and (
-    (& "VBoxManage" "list" "vms") | Select-String -Pattern "^`"$VMName`"")) {
+    (& ".\VBoxManage.exe" "list" "vms") | Select-String -Pattern "^`"$VMName`"")) {
     Write-Verbose "Removing existing VM '$VMName'..."
-    & VBoxManage "unregistervm" $VMName "--delete"
+    & .\VBoxManage.exe "unregistervm" $VMName "--delete"
 }
 
 Write-Verbose "Expanding package $Package"
@@ -120,38 +121,38 @@ try {
     }
 
     Write-Verbose "Importing VM $Ovf..."
-    & "VBoxManage" import "`"$($Ovf.FullName)`"" "--vsys" "0" "--vmname" "$VMName"
+    & ".\VBoxManage.exe" import "`"$($Ovf.FullName)`"" "--vsys" "0" "--vmname" "$VMName"
 
     Write-Verbose "Setting MAC address to $MacAddress..."
-    & VBoxManage modifyvm $VMName "--macaddress1" $MacAddress 
+    & .\VBoxManage.exe modifyvm $VMName "--macaddress1" $MacAddress 
     
     if (![String]::IsNullOrWhiteSpace($BridgedTo)) {
         Write-Verbose "Setting MAC address to $MacAddress..."
-        & VBoxManage modifyvm $VMName "--nic1" "bridged" "--bridgeadapter1" $BridgedTo 
+        & .\VBoxManage.exe modifyvm $VMName "--nic1" "bridged" "--bridgeadapter1" $BridgedTo 
     } else {
         Write-Verbose "Setting first interface to NAT network..."
-        & VBoxManage modifyvm $VMName "--nic1" "nat" 
+        & .\VBoxManage.exe modifyvm $VMName "--nic1" "nat" 
     }
 
     Write-Verbose "Customizing BIOS..."
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSVendor" "Phoenix Technologies LTD"
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSVersion" "6.00"
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseDate" "07/31/2013"
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseMajor" 6
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseMinor" 0
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSFirmwareMajor" 6
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSFirmwareMinor" 0
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiSystemVendor" "VMware, Inc."
-    & VBoxManage setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiSystemProduct" "VMware Virtual Platform"
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSVendor" "Phoenix Technologies LTD"
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSVersion" "6.00"
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseDate" "07/31/2013"
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseMajor" 6
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSReleaseMinor" 0
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSFirmwareMajor" 6
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiBIOSFirmwareMinor" 0
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiSystemVendor" "VMware, Inc."
+    & .\VBoxManage.exe setextradata $VMName "VBoxInternal/Devices/pcbios/0/Config/DmiSystemProduct" "VMware Virtual Platform"
 
     Write-Verbose "Setting up port forwarding for SSH, HTTP and HTTPS..."
     foreach($Forward in $ForwardedPorts) {
-        & VBoxManage modifyvm $VMName --natpf1 ("guest{0},tcp,,{1},,{2}" -f $Forward)
+        & .\VBoxManage.exe modifyvm $VMName --natpf1 ("guest{0},tcp,,{1},,{2}" -f $Forward)
     }
 
     if ($Start) {
         Write-Verbose "Starting VM..."
-        & VBoxManage startvm $VMName
+        & .\VBoxManage.exe startvm $VMName
     }
 
 } finally {
