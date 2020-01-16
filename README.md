@@ -12,7 +12,7 @@ Only for testing purposes.
 
 3-  It may be necessary to disabled execution policy first : 
 
-`Set-ExecutionPolicy RemoteSigned`
+`Set-ExecutionPolicy Unrestricted`
 
 4- Run the script :
 ` .\Deploy-NSVPX-Vbox.ps1 -Package [zip_file] -VMName [vm_name] -Force -Verbose -Start`
@@ -21,5 +21,9 @@ Only for testing purposes.
 5- If everything goes well you should see *"VM "NSVPX-13.0" has been successfully started."*
 ![](https://github.com/onSec-fr/Deploy-Citrix-NSVPX-VirtualBox/blob/master/Resources/img_2.png?raw=true)
 
-6- Open VirtualBox, the newly created VM should be there !
+6- Reactivate powershell policy !
+
+`Set-ExecutionPolicy Restricted`
+
+7- Open VirtualBox, the newly created VM should be there !
 ![](https://github.com/onSec-fr/Deploy-Citrix-NSVPX-VirtualBox/blob/master/Resources/img_3.png?raw=true)
